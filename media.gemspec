@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.email       = ['jamiehodge@me.com']
   gem.summary     = 'FFMPEG/AVConv wrapper'
   gem.description = gem.summary
-  gem.homepage    = 'https://github.com/jamiehodge/convert'
+  gem.homepage    = 'https://github.com/jamiehodge/media'
   
   gem.files         = `git ls-files`.split($/)
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
