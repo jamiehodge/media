@@ -27,7 +27,7 @@ module Media
       
         module InstanceMethods
         
-          def option(key, value)
+          def option(key, value=true)
             options << Media::Option.new(key: key, value: value)
           end
       
