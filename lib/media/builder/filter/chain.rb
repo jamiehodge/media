@@ -11,7 +11,9 @@ module Media
             chain = new
           
             if block_given?
-              @context = eval('self', blk.binding)
+              context = eval('self', blk.binding)
+              chain.instance_variable_set(:@context, context)
+              
               chain.instance_eval(&blk)
             end
             chain
@@ -26,7 +28,6 @@ module Media
           
           def method_missing(method, *args, &blk)
             @context && @context.send(method, *args, &blk)
-            super
           end
         end
         

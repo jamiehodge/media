@@ -13,7 +13,9 @@ module Media
           output = new(url: url)
           
           if block_given?
-            @context = eval('self', blk.binding)
+            context = eval('self', blk.binding)
+            output.instance_variable_set(:@context, context)
+            
             output.instance_eval(&blk)
           end
           output
@@ -37,7 +39,6 @@ module Media
   
         def method_missing(method, *args, &blk)
           @context && @context.send(method, *args, &blk)
-          super
         end
       end
       

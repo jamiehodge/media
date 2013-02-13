@@ -13,7 +13,9 @@ module Media
             graph = new
           
             if block_given?
-              @context = eval('self', blk.binding)
+              context = eval('self', blk.binding)
+              graph.instance_variable_set(:@context, context)
+              
               graph.instance_eval(&blk)
             end
             graph
@@ -28,7 +30,6 @@ module Media
           
           def method_missing(method, *args, &blk)
             @context && @context.send(method, *args, &blk)
-            super
           end
         end
         

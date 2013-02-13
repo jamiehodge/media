@@ -16,7 +16,9 @@ module Media
             converter = new
           
             if block_given?
-              @context = eval('self', blk.binding)
+              context = eval('self', blk.binding)
+              converter.instance_variable_set(:@context, context)
+              
               converter.instance_eval(&blk)
             end
             converter
@@ -39,7 +41,6 @@ module Media
         
           def method_missing(method, *args, &blk)
             @context && @context.send(method, *args, &blk)
-            super(method, *args, &blk)
           end
         end
       

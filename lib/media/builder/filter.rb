@@ -10,7 +10,9 @@ module Media
           filter = new(name: name)
           
           if block_given?
-            @context = eval('self', blk.binding)
+            context = eval('self', blk.binding)
+            filter.instance_variable_set(:@context, context)
+            
             filter.instance_eval(&blk)
           end
           filter
@@ -34,7 +36,6 @@ module Media
         
         def method_missing(method, *args, &blk)
           @context && @context.send(method, *args, &blk)
-          super
         end
       end
       
