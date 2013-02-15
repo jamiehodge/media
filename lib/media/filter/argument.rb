@@ -3,7 +3,7 @@ module Media
     class Argument
       def initialize(args)
         @key   = args.fetch(:key)
-        @value = args.fetch(:value, true) 
+        @value = args.fetch(:value, true)
       end
       
       def to_s
@@ -16,7 +16,7 @@ module Media
       private
       
       def value
-        @value.gsub(/([\[\]=;,])/, "\\\\\\1")
+        @value.to_s.gsub(/([\[\]=;,])/, "\\\\\\1")
       end
     end
   end
