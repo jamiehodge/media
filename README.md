@@ -50,10 +50,6 @@ Or install it yourself as:
     end
 
     conversion.call {|progress| p progress}
-
-Outputs:    
-
-    ffmpeg -v info -y -loop 1 -f image2 -i http://www.google.com/images/srpr/logo3w.png -vcodec libvpx -acodec libvorbis -t 4 -map [video] -map [audio] -filter_complex negate, hflip [video]; aevalsrc=sin(440*2*PI*t) [audio] /path/to/test2.webm
     
 ## Contributing
 
