@@ -9,15 +9,15 @@ module Media
     end
     
     def test_option
-      assert_equal '-foo bar', subject.new(key: 'foo', value: 'bar').to_s
+      assert_equal ['-foo', 'bar'], subject.new(key: 'foo', value: 'bar').to_a
     end
     
     def test_true_flag
-      assert_equal '-foo', subject.new(key: 'foo').to_s
+      assert_equal ['-foo'], subject.new(key: 'foo').to_a
     end
     
     def test_false_flag
-      assert_equal '-nofoo', subject.new(key: 'foo', value: false).to_s
+      assert_equal ['-nofoo'], subject.new(key: 'foo', value: false).to_a
     end
   end
 end

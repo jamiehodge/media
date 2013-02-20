@@ -13,11 +13,15 @@ module Media
       end
       
       def call
-        @subshell.new(cmd: to_s).call
+        @subshell.new(cmd: to_a).call
       end
       
-      def to_s
-        [@cmd, @options, @input].reject(&:empty?).join(' ')
+      def to_a
+        [
+          @cmd,
+          @options.map(&:to_a),
+          @input
+        ].flatten
       end
     end
   end

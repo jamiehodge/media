@@ -6,9 +6,13 @@ require_relative 'option'
 
 module Media
   class Container
+    
+    attr_reader :url, :options
+    
     def initialize(args)
-      @input = args.fetch(:input)
-      @probe = args.fetch(:probe, Command::Probe) 
+      @url   = args.fetch(:url)
+      @probe = args.fetch(:probe, Command::Probe)
+      @options = args.fetch(:options, []) + required_options
     end
     
     def format
@@ -29,10 +33,10 @@ module Media
     end
     
     def probe
-      @probe.new(input: @input, options: options).call
+      @probe.new(input: @url, options: options).call
     end
     
-    def options
+    def required_options
       [ 
         Option.new(key: 'print_format', value: 'json'),
         Option.new(key: 'show_format'),

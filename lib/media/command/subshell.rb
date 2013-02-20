@@ -10,11 +10,30 @@ module Media
       attr_reader :out, :error, :status
     
       def initialize(args)
-        @cmd = args.fetch(:cmd)
+        @cmd = Array(args.fetch(:cmd))
       end
     
       def call
-        @out, @error, @status = Open3.capture3(@cmd)
+        @out, @error, @status = Open3.popen3(*@cmd) {|stdin,stdout,stderr,thread|
+          
+          out = Thread.new do
+            stdout.each_with_object([]) do |line, memo|
+              memo << line
+              yield line.strip if block_given?
+            end.join
+          end
+          
+          err = Thread.new do
+            stderr.each_with_object([]) do |line, memo|
+              memo << line
+              yield line.strip if block_given?
+            end.join
+          end
+          
+          stdin.close
+          
+          [out.value, err.value, thread.value]
+        }
         self
       end
     

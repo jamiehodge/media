@@ -18,27 +18,31 @@ module Media
       end
       
       def test_empty_call
-        subshell.expect(:new, subshell, [cmd: 'ffmpeg'])
-        subshell.expect(:call, true)
+        stub = Class.new do
+          def success?; true; end
+        end
+        
+        subshell.expect(:new, subshell, [cmd: ['ffmpeg', '-v', 'info']])
+        subshell.expect(:call, stub.new)
         
         subject.call
       end
       
       def test_with_options
-        assert_equal 'ffmpeg options', subject(options: ['options']).to_s
+        assert_equal ['ffmpeg', '-v', 'info', 'option'], subject(options: [['option']]).to_a
       end
       
       def test_call_with_inputs
-        assert_equal 'ffmpeg inputs', subject(inputs: ['inputs']).to_s
+        assert_equal ['ffmpeg', '-v', 'info', 'input'], subject(inputs: [['input']]).to_a
       end
       
       def test_call_with_outputs
-        assert_equal 'ffmpeg outputs', subject(outputs: ['outputs']).to_s
+        assert_equal ['ffmpeg', '-v', 'info', 'output'], subject(outputs: [['output']]).to_a
       end
       
       def test_call_with_all
-        assert_equal 'ffmpeg options inputs outputs',
-          subject(options: ['options'], inputs: ['inputs'], outputs: ['outputs']).to_s
+        assert_equal ['ffmpeg', '-v', 'info', 'option', 'input', 'output'],
+          subject(options: [['option']], inputs: [['input']], outputs: [['output']]).to_a
       end
     end
   end

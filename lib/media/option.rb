@@ -5,11 +5,11 @@ module Media
       @value = args.fetch(:value, true)
     end
     
-    def to_s
+    def to_a
       case @value
-      when TrueClass  then "-#{@key}"
-      when FalseClass then "-no#{@key}"
-      else                 "-#{@key} #{@value}"
+      when TrueClass  then ["-#{@key}"]
+      when FalseClass then ["-no#{@key}"]
+      else                 ["-#{@key}", @value.to_s]
       end
     end
   end

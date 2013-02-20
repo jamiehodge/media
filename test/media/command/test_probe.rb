@@ -18,19 +18,19 @@ module Media
       end
       
       def test_call
-        subshell.expect(:new, subshell, [cmd: 'ffprobe input'])
+        subshell.expect(:new, subshell, [cmd: ['ffprobe', 'input']])
         subshell.expect(:call, true)
         
         subject(input: ['input']).call
       end
       
       def test_call_with_input
-        assert_equal 'ffprobe input', subject(input: ['input']).to_s
+        assert_equal ['ffprobe', 'input'], subject(input: ['input']).to_a
       end
       
       def test_call_with_all
-        assert_equal 'ffprobe options input',
-          subject(options: ['options'], input: ['input']).to_s
+        assert_equal ['ffprobe', 'option', 'input'],
+          subject(options: [['option']], input: ['input']).to_a
       end
     end
   end

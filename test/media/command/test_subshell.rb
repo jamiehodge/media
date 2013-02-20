@@ -10,15 +10,15 @@ module Media
       end
       
       def test_stdout
-        shell = subject.new(cmd: 'echo hello')
+        shell = subject.new(cmd: ['echo', 'hello'])
         
         assert_equal("hello\n", shell.call.out)
       end
       
       def test_stderr
-        shell = subject.new(cmd: 'echo hello 1>&2')
-        
-        assert_equal("hello\n", shell.call.error)
+        shell = subject.new(cmd: ['ffprobe'])
+
+        assert_match(/^ffprobe/, shell.call.error)
       end
       
       def test_success
@@ -31,6 +31,15 @@ module Media
         shell = subject.new(cmd: 'false')
         
         refute(shell.call.success?)
+      end
+      
+      def test_streaming
+        shell = subject.new(cmd: ['echo', "hello\n", 'there'])
+        
+        out = []
+        shell.call {|line| out << line}
+        
+        assert_equal(['hello', 'there'], out)
       end
     end
   end

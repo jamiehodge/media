@@ -18,56 +18,39 @@ Or install it yourself as:
 
 ## Usage
 
-    Media.convert do
-      option 'v', 'warning'
+    conversion = Media.convert do
+      options y: true
   
-      input 'in1.mov'
-  
-      input 'in2.mov' do
-        option 'foo', 'bar'
+      input 'http://www.google.com/images/srpr/logo3w.png' do
+        options loop: 1, f: 'image2'
       end
   
-      output 'out.mov' do
+      output '/path/to/test2.webm' do
+        options vcodec: 'libvpx', acodec: 'libvorbis', t: 4
+        maps label('video'), label('audio')
         graph do
           chain do
-            filter 'split' do
-              input 'in'
-              output 'T1'
-            end
-            filter 'fifo'
-            filter 'overlay' do
-              input 'T2'
-              arg '0'
-              arg 'H/2'
-              output 'out'
+            filter 'negate'
+            filter 'hflip' do
+              outputs 'video'
             end
           end
           chain do
-            filter 'fifo' do
-              input 'T1'
-            end
-            filter 'crop' do
-              arg 'iw'
-              arg 'ih/2'
-              arg '0'
-              arg 'ih/2'
-            end
-            filter 'vflip' do
-              output 'T2'
+            filter 'aevalsrc' do
+              arguments 'sin(440*2*PI*t)' => true
+              outputs 'audio'
             end
           end
         end
-    
-        map 'out'
-    
-        option 'f', 'prores'
       end
     end
-    
+
+    conversion.call {|progress| p progress}
+
 Outputs:    
 
-    ffmpeg -v warning -i in1.mov -foo bar -i in2.mov -filter_complex "[in] split [T1], fifo, [T2] overlay=0:H/2 [out]; [T1] fifo, crop=iw:ih/2:0:ih/2, vflip [T2]" -map out -f prores out.mov
-
+    ffmpeg -v info -y -loop 1 -f image2 -i http://www.google.com/images/srpr/logo3w.png -vcodec libvpx -acodec libvorbis -t 4 -map [video] -map [audio] -filter_complex negate, hflip [video]; aevalsrc=sin(440*2*PI*t) [audio] /path/to/test2.webm
+    
 ## Contributing
 
 1. Fork it

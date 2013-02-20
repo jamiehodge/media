@@ -8,7 +8,7 @@ module Media
       
       def to_s
         case @value
-        when TrueClass, FalseClass then @key
+        when TrueClass, FalseClass then @key.to_s
         else                "#{@key}=#{value}"
         end
       end
