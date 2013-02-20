@@ -4,6 +4,10 @@ An `ffmpeg` or `avconv` wrapper
 
 ## Installation
 
+Install ffmpeg:
+
+    brew install ffmpeg
+
 Add this line to your application's Gemfile:
 
     gem 'media'
