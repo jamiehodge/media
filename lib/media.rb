@@ -15,6 +15,10 @@ module Media
     Media::Command::Converter.new(&block)
   end
   
+  def probe(url, &block)
+    Media::Container.new(url: url, &block)
+  end
+  
   def size(args)
     Media::Helper::Size.new(args)
   end

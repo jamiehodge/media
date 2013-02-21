@@ -6,7 +6,7 @@ An `ffmpeg` or `avconv` wrapper
 
 Install ffmpeg:
 
-    brew install ffmpeg
+    brew install ffmpeg --with-tools --with-libvpx --with-libvorbis --with-libtheora
 
 Add this line to your application's Gemfile:
 
@@ -22,21 +22,24 @@ Or install it yourself as:
 
 ## Usage
 
+Conversion:
+
     conversion = Media.convert do
       options y: true
   
+      # this example is slow, due to heavy network usage
       input 'http://www.google.com/images/srpr/logo3w.png' do
         options loop: 1, f: 'image2'
       end
   
-      output '/path/to/test2.webm' do
+      output '/path/to/example.webm' do
         options vcodec: 'libvpx', acodec: 'libvorbis', t: 4
         maps label('video'), label('audio')
         graph do
           chain do
             filter 'negate'
-            filter 'hflip' do
-              outputs 'video'
+            filter 'hflip' do |f| # optional
+              f.outputs 'video'
             end
           end
           chain do
@@ -50,6 +53,18 @@ Or install it yourself as:
     end
 
     conversion.call {|progress| p progress}
+    
+Probe:
+
+    probe = Media.probe('/path/to/example.mov') do
+      options show_frames: true
+    end
+    
+    probe.format
+    probe.streams
+    probe.streams('audio')
+    probe.frames   # requires show_frames option
+    probe.metadata # => Hash
     
 ## Contributing
 
