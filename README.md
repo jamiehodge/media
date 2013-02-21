@@ -22,7 +22,7 @@ Or install it yourself as:
 
 ## Usage
 
-Conversion:
+Convert:
 
     conversion = Media.convert do
       options y: true
