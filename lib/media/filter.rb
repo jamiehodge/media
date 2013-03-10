@@ -8,10 +8,11 @@ module Media
     attr_reader :name
     
     def initialize(args, &block)
-      @name      = args.fetch(:name)
-      @arguments = Array args.fetch(:arguments, [])
-      @inputs    = Array args.fetch(:inputs, [])
-      @outputs   = Array args.fetch(:outputs, [])
+      @name        = args.fetch(:name)
+      @expressions = Array args.fetch(:expressions, [])
+      @arguments   = Array args.fetch(:arguments, [])
+      @inputs      = Array args.fetch(:inputs, [])
+      @outputs     = Array args.fetch(:outputs, [])
       
       block.arity < 1 ? instance_eval(&block) : block.call(self) if block_given?
     end
@@ -41,10 +42,23 @@ module Media
     end
     alias_method :arguments=, :arguments
     
+    def expressions(*value)
+      return @expressions if value.empty?
+      
+      @expressions = value
+    end
+    alias_method :expressions=, :expressions
+    
     private
     
     def filter
-      [name, arguments.join(':')].reject(&:empty?).join('=')
+      [
+        name,
+        [
+          expressions.join(':'), 
+          arguments.join(':')
+        ].reject(&:empty?).join('::')
+      ].reject(&:empty?).join('=')
     end
   end
 end
