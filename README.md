@@ -44,7 +44,7 @@ Convert:
           end
           chain do
             filter 'aevalsrc' do
-              arguments 'sin(440*2*PI*t)' => true
+              expressions 'sin(440*2*PI*t)'
               outputs 'audio'
             end
           end
