@@ -1,4 +1,4 @@
-Copyright (c) 2013 Jamie Hodge
+Copyright (c) 2013 Copenhagen University
 
 MIT License
 
