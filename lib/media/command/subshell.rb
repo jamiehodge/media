@@ -14,6 +14,9 @@ module Media
       end
     
       def call
+        ENV['CLICOLOR'] = nil
+        ENV['AV_LOG_FORCE_COLOR'] = nil
+        
         @out, @error, @status = Open3.popen3(*@cmd) {|stdin,stdout,stderr,thread|
           
           out = Thread.new do
