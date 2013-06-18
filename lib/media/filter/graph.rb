@@ -16,7 +16,7 @@ module Media
       end
       
       def add_chain(&block)
-        @chains << Filter::Chain.new(&block)
+        Filter::Chain.new(&block).tap {|chain| chains << chain }
       end
       alias_method :chain, :add_chain
     end

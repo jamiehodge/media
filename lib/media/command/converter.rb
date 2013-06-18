@@ -52,12 +52,12 @@ module Media
       alias_method :options=, :options
       
       def add_input(url, &block)
-        @inputs << Input.new(url: url, &block)
+        Input.new(url: url, &block).tap {|input| inputs << input }
       end
       alias_method :input, :add_input
       
       def add_output(url, &block)
-        @outputs << Output.new(url: url, &block)
+        Output.new(url: url, &block).tap {|output| outputs << output }
       end
       alias_method :output, :add_output
       

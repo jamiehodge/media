@@ -38,7 +38,9 @@ module Media
     def graph(&block)
       return @graph unless block_given?
       
-      @graph = Option.new(key: 'filter_complex', value: Filter::Graph.new(&block))
+      Filter::Graph.new(&block).tap do |graph|
+        @graph = Option.new(key: 'filter_complex', value: result)
+      end
     end
     alias_method :graph=, :graph
   end

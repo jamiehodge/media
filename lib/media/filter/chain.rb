@@ -14,7 +14,7 @@ module Media
       end
       
       def add_filter(name, &block)
-        @filters << Filter.new(name: name, &block)
+        Filter.new(name: name, &block).tap {|filter| filters << filter }
       end
       alias_method :filter, :add_filter
     end
