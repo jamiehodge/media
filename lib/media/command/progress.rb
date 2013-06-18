@@ -15,7 +15,8 @@ module Media
       def update(line)
         case line
         when DURATION
-          @duration = ($1.to_i * 3600) + ($2.to_i * 60) + $3.to_f + $4.to_f
+          @duration =
+            [@duration, ($1.to_i * 3600) + ($2.to_i * 60) + $3.to_f + $4.to_f].max
           yield self if block_given?
         when TIME
           @time = ($1.to_i * 3600) + ($2.to_i * 60) + $3.to_f
