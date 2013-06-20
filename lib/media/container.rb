@@ -1,4 +1,4 @@
-require 'json'
+require 'yajl'
 require 'ostruct'
 
 require_relative 'command/probe'
@@ -40,7 +40,7 @@ module Media
     end
     
     def metadata
-      @metadata ||= JSON.parse(probe.out)
+      @metadata ||= Yajl::Parser.parse(probe.out)
     end
     
     private
