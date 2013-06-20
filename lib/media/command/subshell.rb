@@ -23,8 +23,8 @@ module Media
         
         while wait_thread.alive?
           next unless IO.select([o, e], nil, nil, 1)
-          out << read(io: o)
-          error << read(io: e).tap {|e| yield e.strip if block_given? }
+          @out << read(io: o)
+          @error << read(io: e).tap {|e| yield e.strip if block_given? }
         end
         
         self
