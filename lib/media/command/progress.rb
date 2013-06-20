@@ -32,6 +32,10 @@ module Media
       def to_f
         time / duration rescue ZeroDivisionError 0.0
       end
+      
+      def to_s
+        to_f.to_s
+      end
     end
   end
 end
