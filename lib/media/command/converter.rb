@@ -1,4 +1,4 @@
-require_relative 'subshell'
+require_relative 'child_process'
 require_relative 'progress'
 require_relative '../option'
 
@@ -10,12 +10,12 @@ module Media
       
       def initialize(args={}, &block)
         @options = Array args.fetch(:options, [])
-        @inputs  = Array args.fetch(:inputs, [])
+        @inputs  = Array args.fetch(:inputs,  [])
         @outputs = Array args.fetch(:outputs, [])
         
-        @cmd      = args.fetch(:cmd, 'ffmpeg')
-        @subshell = args.fetch(:subshell, Subshell)
-        @progress = args.fetch(:progress, Progress)
+        @command       = args.fetch(:command, 'ffmpeg')
+        @child_process = args.fetch(:child_process, ChildProcess)
+        @progress      = args.fetch(:progress, Progress)
         
         block.arity < 1 ? instance_eval(&block) : block.call(self) if block_given?
       end
@@ -23,7 +23,7 @@ module Media
       def call(&blk)
         progress = @progress.new
         
-        process = @subshell.new(cmd: to_a).call do |line|   
+        process = @child_process.new(command: to_a).call do |line|   
           progress.update(line, &blk)
         end
         progress.complete(&blk) if process.success?
@@ -33,7 +33,7 @@ module Media
       
       def to_a
         [
-          @cmd,
+          @command,
           (required_options + options).map(&:to_a),
           inputs.map(&:to_a),
           outputs.map(&:to_a)

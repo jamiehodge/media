@@ -1,5 +1,10 @@
+ENV['CLICOLOR']           = nil
+ENV['AV_LOG_FORCE_COLOR'] = nil
+
 require 'open3'
 require 'forwardable'
+
+require_relative 'stream'
 
 module Media
   module Command
@@ -16,9 +21,6 @@ module Media
       end
     
       def call
-        ENV['CLICOLOR'] = nil
-        ENV['AV_LOG_FORCE_COLOR'] = nil
-        
         _, o, e, @wait_thread = Open3.popen3(*@cmd)
         
         while wait_thread.alive?

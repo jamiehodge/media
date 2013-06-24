@@ -1,4 +1,4 @@
-require_relative 'subshell'
+require_relative 'child_process'
 
 module Media
   module Command
@@ -8,17 +8,26 @@ module Media
         @options = Array args.fetch(:options, [])
         @input   = args.fetch(:input)
         
-        @cmd      = args.fetch(:cmd, 'ffprobe')
-        @subshell = args.fetch(:subshell, Subshell)
+        @command       = args.fetch(:command, 'ffprobe')
+        @child_process = args.fetch(:child_process, ChildProcess)
       end
       
       def call
-        @subshell.new(cmd: to_a).call
+        tries   = 3
+        process = nil
+        
+        while tries > 0
+          process = @child_process.new(command: to_a).call
+          break if process.success?
+          tries -= 1
+        end
+        
+        process
       end
       
       def to_a
         [
-          @cmd,
+          @command,
           @options.map(&:to_a),
           @input
         ].flatten

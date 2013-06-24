@@ -6,20 +6,25 @@ module Media
     class TestProbe < MiniTest::Unit::TestCase
       
       def subject(args={})
-        @subject ||= Probe.new(args.merge(subshell: subshell))
+        @subject ||= Probe.new(args.merge(child_process: child_process))
       end
       
-      def subshell
-        @subshell ||= MiniTest::Mock.new
+      def child_process
+        @child_process ||= MiniTest::Mock.new
       end
       
       def after
-        subshell.verify
+        child_process.verify
       end
       
       def test_call
-        subshell.expect(:new, subshell, [cmd: ['ffprobe', 'input']])
-        subshell.expect(:call, true)
+        child_process.expect(:new, child_process, [command: ['ffprobe', 'input']])
+        child_process.expect(:call, child_process)
+        child_process.expect(:success?, false)
+        
+        child_process.expect(:new, child_process, [command: ['ffprobe', 'input']])
+        child_process.expect(:call, child_process)
+        child_process.expect(:success?, true)
         
         subject(input: ['input']).call
       end
