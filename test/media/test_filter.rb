@@ -13,7 +13,7 @@ module Media
         outputs: 'outputs'
       )
       
-      assert_equal('inputs name=expressions|expressions::arguments outputs', filter.to_s)
+      assert_equal('inputs name=expressions|expressions:arguments outputs', filter.to_s)
     end
   end
 end

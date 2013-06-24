@@ -57,7 +57,7 @@ module Media
         [
           expressions.join('|'), 
           arguments.join(':')
-        ].reject(&:empty?).join('::')
+        ].reject(&:empty?).join(':')
       ].reject(&:empty?).join('=')
     end
   end
