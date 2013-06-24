@@ -7,13 +7,13 @@ module Media
     def test_to_s
       filter = Filter.new(
         name: 'name',
-        expressions: 'expressions', 
+        expressions: ['expressions','expressions'], 
         arguments: 'arguments', 
         inputs: 'inputs',
         outputs: 'outputs'
       )
       
-      assert_equal('inputs name=expressions::arguments outputs', filter.to_s)
+      assert_equal('inputs name=expressions|expressions::arguments outputs', filter.to_s)
     end
   end
 end

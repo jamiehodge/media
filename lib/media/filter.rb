@@ -55,7 +55,7 @@ module Media
       [
         name,
         [
-          expressions.join(':'), 
+          expressions.join('|'), 
           arguments.join(':')
         ].reject(&:empty?).join('::')
       ].reject(&:empty?).join('=')
