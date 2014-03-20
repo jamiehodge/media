@@ -1,49 +1,44 @@
-ENV['CLICOLOR']           = nil
-ENV['AV_LOG_FORCE_COLOR'] = nil
-
-require 'forwardable'
 require 'open3'
 
+require_relative 'progress'
+require_relative 'result'
 require_relative 'stream'
 
 module Media
   module Command
     class ChildProcess
-      extend Forwardable
-      
-      attr_reader :command, :wait_thread
-      
-      def initialize(args)
-        @command = Array(args.fetch(:command))
-      end
-      
-      def call(&block)
-        @in, @out, @error, @wait_thread = Open3.popen3(*command)
 
-        @in.close
-        
-        @out   = Stream.new(@out)
-        @error = Stream.new(@error)
-        
+      attr_reader :command, :bufferer, :resulter, :tracker
+
+      def initialize(command, options = {})
+        @command  = Array(command)
+        @bufferer = options.fetch(:bufferer) { Stream }
+        @resulter = options.fetch(:resulter) { Result }
+        @tracker  = options.fetch(:tracker)  { Progress }
+      end
+
+      def call(&block)        
+        stdin, stdout, stderr, wait_thread =
+          Open3.popen3(environment, *command.map(&:to_s))
+
+        stdin.close
+        stderr = bufferer.new(stderr)
+
+        progress = tracker.new
+
         while wait_thread.alive?
-          read, _ = IO.select([@out, @error])
-          read.each do |stream|
-            stream.handle_read(&block)
-          end
+          read, _ = IO.select([stderr])
+          read.each {|io| progress.parse(io.handle_read, &block) }
         end
-        
-        self
+
+        resulter.new(stderr.read, stdout.read, wait_thread.value)
       end
-      
-      def out
-        @out.to_s
+
+      private
+
+      def environment
+        { "CLICOLOR" => nil, "AV_LOG_FORCE_COLOR" => nil }
       end
-      
-      def error
-        @error.to_s
-      end
-      
-      def_delegators :'wait_thread.value', :exitstatus, :pid, :success?
     end
   end
 end

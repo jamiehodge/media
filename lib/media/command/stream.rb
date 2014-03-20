@@ -1,23 +1,21 @@
 module Media
   module Command
     class Stream
-      
+
       attr_reader :buffer, :io
-      
+
       def initialize(io)
         @io     = io
-        @buffer = '' 
+        @buffer = ""
       end
-      
+
       alias to_io io
-      alias to_s  buffer
-      
-      def handle_read(&block)
-        buffer << io.read_nonblock(4096).tap do |data| 
-          block.call(data) if block
-        end
-      rescue IO::WaitReadable
-      rescue EOFError, Errno::ECONNRESET
+      alias read  buffer
+
+      def handle_read(length = 4096)
+        io.read_nonblock(length).tap {|data| buffer << data }
+      rescue IO::WaitReadable, EOFError, Errno::ECONNRESET
+        buffer
       end
     end
   end
