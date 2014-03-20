@@ -26,12 +26,12 @@ Convert:
 
     conversion = Media.convert do
       options y: true
-  
+
       # this example is slow, due to heavy network usage
       input 'http://www.google.com/images/srpr/logo3w.png' do
         options loop: 1, f: 'image2'
       end
-  
+
       output '/path/to/example.webm' do
         options vcodec: 'libvpx', acodec: 'libvorbis', t: 4
         maps label('video'), label('audio')
@@ -53,19 +53,19 @@ Convert:
     end
 
     conversion.call {|progress| p progress}
-    
+
 Probe:
 
     probe = Media.probe('/path/to/example.mov') do
       options show_frames: true
     end
-    
+
     probe.format
     probe.streams
     probe.streams('audio')
     probe.frames   # requires show_frames option
     probe.metadata # => Hash
-    
+
 ## Contributing
 
 1. Fork it

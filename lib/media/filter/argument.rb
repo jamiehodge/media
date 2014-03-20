@@ -5,16 +5,16 @@ module Media
         @key   = args.fetch(:key)
         @value = args.fetch(:value, true)
       end
-      
+
       def to_s
         case @value
         when TrueClass, FalseClass then @key.to_s
         else                "#{@key}=#{value}"
         end
       end
-      
+
       private
-      
+
       def value
         @value.to_s.gsub(/([\[\]=;,])/, "\\\\\\1")
       end

@@ -5,7 +5,7 @@ module Media
         @width  = args.fetch(:width)
         @height = args.fetch(:height)
       end
-    
+
       def to_s
         [@width, @height].join('x')
       end

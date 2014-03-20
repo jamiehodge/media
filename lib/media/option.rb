@@ -4,7 +4,7 @@ module Media
       @key   = args.fetch(:key)
       @value = args.fetch(:value, true)
     end
-    
+
     def to_a
       case @value
       when TrueClass  then ["-#{@key}"]

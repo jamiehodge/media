@@ -4,17 +4,17 @@ module Media
   class Filter
     class Graph
       attr_reader :chains
-      
+
       def initialize(args={}, &block)
         @chains = args.fetch(:chains, [])
-        
+
         block.arity < 1 ? instance_eval(&block) : block.call(self) if block_given?
       end
-      
+
       def to_s
         chains.join('; ')
       end
-      
+
       def add_chain(&block)
         Filter::Chain.new(&block).tap {|chain| chains << chain }
       end
