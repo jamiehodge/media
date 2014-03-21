@@ -18,8 +18,8 @@ module Media
         block.arity < 1 ? instance_eval(&block) : block.call(self) if block_given?
       end
 
-      def call(&block)
-        @child_process.new(to_a).call do |progress|
+      def call(duration = 0, &block)
+        @child_process.new(to_a).call(duration) do |progress|
           yield progress if block_given?
         end
       end

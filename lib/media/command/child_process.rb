@@ -17,14 +17,14 @@ module Media
         @tracker  = options.fetch(:tracker)  { Progress }
       end
 
-      def call(&block)        
+      def call(duration = 0, &block)
         stdin, stdout, stderr, wait_thread =
           Open3.popen3(environment, *command.map(&:to_s))
 
         stdin.close
         stderr = bufferer.new(stderr)
 
-        progress = tracker.new
+        progress = tracker.new(duration)
 
         while wait_thread.alive?
           read, _ = IO.select([stderr])
